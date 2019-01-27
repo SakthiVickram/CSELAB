@@ -1,0 +1,124 @@
+#include <iostream>
+
+using namespace std;
+
+struct edge
+{
+    int src,des,weight;
+}e[30];
+
+int find(int,int);
+int ns[30];
+int main()
+{
+int V,E,i,j,nsi,s;
+   cout<<"Enter the number of vertices:";
+   cin>>V;
+   cout<<"Enter the number of edges:";
+   cin>>E;
+   s=E;
+
+   for(i=0;i<E;i++)
+   {
+   cout<<"src: ";
+   cin>>e[i].src;
+   cout<<"dest: ";
+   cin>>e[i].des;
+   cout<<"Weight: ";
+   cin>>e[i].weight;
+   }
+    struct edge temp;
+    for (i = 1; i < E; i++)      //moving from left to right in unsorted array 1 to n-1
+   {
+      temp = e[i];                  //element to be moved into sorted portion
+      j = i;
+      while ((temp.weight < e[j-1].weight) && (j >0))      //moving from right to left in sorted array
+      {
+	 e[j] = e[j-1];                     //shift right
+	 j = j - 1;
+      }
+      e[j]= temp;
+   }
+
+   cout<<"the sorted elements are:"<<endl;
+for(i=0;i<E;i++)
+cout<< e[i].src<<"   " <<e[i].des<<"    "<<e[i].weight<<endl;
+
+ns[0]=e[0].src;
+ns[1]=e[0].des;
+e[E].src=e[0].src;
+e[E].des=e[0].des;
+e[E].weight=e[0].weight;
+E++;
+nsi=2;
+int noe=1;
+
+            for(i=1;noe!=V-1;i++)
+            {
+                if( (find(nsi,e[i].src))  && (find (nsi,e[i].des) ) ) //cycle
+                    {
+                    cout<<"cycle"<<endl;
+
+                                            continue;
+
+                    }
+
+                else if(find(nsi,e[i].src)){
+                    ns[nsi++]=e[i].des;
+                    //cout<<"inserting"<<e[i].des<<"  "<<ns[nsi-1]<<endl;
+                e[E].src=e[i].src;
+                e[E].des=e[i].des;
+                e[E].weight=e[i].weight;
+                E++;
+                noe++;
+                }
+                else if(find(nsi,e[i].des))
+                {
+                    ns[nsi++]=e[i].src;
+                   e[E].src=e[i].src;
+                e[E].des=e[i].des;
+                e[E].weight=e[i].weight;
+                    //cout<<"inserting"<<e[i].src<<" "<<ns[nsi-1]<<endl;
+                E++;
+                noe++;
+                }
+               else{
+                ns[nsi++]=e[i].src;
+                ns[nsi++]=e[i].des;
+                    e[E].src=e[i].src;
+                e[E].des=e[i].des;
+                e[E].weight=e[i].weight;
+
+               E++;
+               noe++;
+
+               }
+
+               }
+
+               //for(i=0;i<nsi;i++)
+                //cout<<ns[i]<<"   "<<endl;
+
+                cout<<"Minimum Spanning Tree"<<endl;
+                for(i=s;i<E;i++)
+                cout<< e[i].src<<"   " <<e[i].des<<"    "<<e[i].weight<<endl;
+
+    return 0;
+}
+
+
+int find (int nsi,int elem)
+{
+int i,b;
+    for(i=0;i<nsi;i++)
+    {
+       b=0;
+       if (elem==ns[i])
+        {
+            b=1;
+          break;
+        }
+
+    }
+    return b;
+}
